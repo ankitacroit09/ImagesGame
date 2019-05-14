@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+        <title>Select the file to upload to server</title>
+        <link rel="stylesheet" href="" />
+    </head>
+    <body>
+        <div>
+            <div>
+                <h2>Enter album name and then Select the file to upload to server</h2>
+            </div>
+            <div>
+                <div>
+                    <form id="file" name="file">
+                     	<input id="album" type="text" name="album" placeholder="ex- 'images' folder" />
+                        <input id="inputfile" type="file" name="file" required />
+                    </form>
+                    <div>
+                        <div id="status">
+                        <h1 id="h">
+                        </h1></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+   <script>
+   var fileform = document.querySelector('#file');
+   var fileinput = document.querySelector('#inputfile');
+   var album = document.querySelector('#album');
+   
+   
+   document.getElementById('inputfile').addEventListener('change', function (event) {
+	   
+	   
+	   var file = fileinput.files;
+	   var albumset ="images"
+	   if(album.value !=""){
+		   albumset = album.value;
+	   }
+	   
+	   const files = event.target.files;
+	   const reader = new FileReader();
+	   
+	   reader.onload = function (e) {
+	     console.log(e.target.result);
+	     var byteArrayofsrc =e.target.result;
+	     var obj = '{'
+		       +'"filename" : "'+files[0].name+'", '
+		       +'"album"  : "'+albumset+'", '
+		       +'"content" : "'+byteArrayofsrc+'" '
+		       +'}';
+		       
+		       uploadToServer(obj);
+	   }
+	   
+	   reader.readAsDataURL(files[0]);
+	 }, false);
+   
+    
+    function uploadToServer(obj) {
+        alert('Upload Processing !');
+         var xhttp = new XMLHttpRequest();
+         xhttp.open("POST", "/storeImage");
+         xhttp.setRequestHeader("Content-type", "application/json");
+         xhttp.onload =  function() {
+             if (this.readyState == 4 && xhttp.status == 200) {
+                 console.log("Successful stored");
+                 document.getElementById('h').innerHTML= "Successful stored";
+              }
+         
+        };
+        xhttp.send(obj);
+    }
+   </script>
+    </body>
+ 
+</html>

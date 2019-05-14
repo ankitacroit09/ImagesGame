@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2 id="h">Operation</h2>
+<input id="image" type="text" name="image" placeholder="images Name" />
+<input id="album" type="text" name="album" placeholder=" folder Name" />
+<button type="button" onclick="deleteImg()" id ="show"> DELETE </button>
+
+<div><h1 id="h"></h1></div>
+<br>
+ 
+<script>
+function deleteImg() {
+	  var filename = document.querySelector('#image').value
+	  var albumset = document.querySelector('#album').value;
+	 
+	  var level = "false";
+	    var reqobj = '{'
+	    	   +'"filename" : "'+filename+'", '
+	    	   +'"level" :  "'+level+'", '
+		       +'"foldername"  : "'+albumset+'"'
+		       +'}';
+	    
+	     var xhttp = new XMLHttpRequest();
+	     xhttp.open("POST", "/delete");
+	     xhttp.setRequestHeader("Content-type", "application/json");
+	     xhttp.onload =  function() {
+	         if (this.readyState == 4 && xhttp.status == 200) {
+	            	  document.getElementById('h').innerHTML = this.responseText;
+	         }
+	    };
+	    xhttp.send(reqobj);
+}
+</script>
+</body>
+</html>

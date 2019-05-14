@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2 id="h">Operation</h2>
+<input id="album" type="text" name="album" placeholder="ex 'images' folder" />
+<button type="button" onclick="retrieve()" id ="show"> SHOW </button>
+
+<div id="hh"><h1 id="h"></h1></div>
+<br>
+ 
+<script>
+
+function retrieve() {
+    alert('Retrieve Processing!');
+    var albumset = document.querySelector('#album').value;
+    var reqobj = '{'
+	       +'"album"  : "'+albumset+'"'
+	       +'}';
+    
+     var xhttp = new XMLHttpRequest();
+     xhttp.open("POST", "/retrieve");
+     xhttp.setRequestHeader("Content-type", "application/json");
+     xhttp.onload =  function() {
+         if (this.readyState == 4 && xhttp.status == 200) {
+             var someJsonString=this.responseText;
+             console.log(someJsonString);
+             if(someJsonString == "folder not found"){
+            	  document.getElementById('h').innerHTML = "Folder not found";
+
+             }
+             var jsonObject = eval('(' + someJsonString + ')');
+             
+             var i=0;
+             while (jsonObject.list[i]) {
+            	 CreateImage(jsonObject.list[i].content);
+            	 i=i+1;
+            	}
+         }
+    };
+    xhttp.send(reqobj);
+}
+
+function CreateImage(src) {
+	  var x = document.createElement("IMG");
+	  x.setAttribute("src", "data:image/png;base64," + src);
+	  x.setAttribute("width", "150");
+	  x.setAttribute("height", "150");
+	  document.body.appendChild(x);
+	}
+	
+</script>
+</body>
+</html>
